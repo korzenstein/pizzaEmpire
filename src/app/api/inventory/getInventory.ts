@@ -9,7 +9,7 @@ export const getInventory = async (playerID: number) => {
     const { data } = await customAxios.get(`/inventory/${playerID}`);
     return data;
   } catch (error) {
-    console.error("Failed to fetch inventory:", error?.response?.data || error?.message);
+    console.error("Failed to fetch inventory:", error);
     throw error;
   }
 };

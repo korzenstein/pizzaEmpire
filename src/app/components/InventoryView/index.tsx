@@ -9,14 +9,17 @@ import useGameStore from "../../store/useGameStore";
 import inventoryAPI from "@/app/api/inventory/inventory";
 
 export default function InventoryView() {
-  const { selectedPlayer, resetGame } = useGameStore();
+  const { selectedPlayer } = useGameStore();
   const [inventory, setInventory] = useState([]);
 
   useEffect(() => {
     async function getInventory() {
+      if (!selectedPlayer) {
+        return null;
+      }
       try {
         const inventoryData = await inventoryAPI.getInventory(
-          selectedPlayer.playerID
+          selectedPlayer?.playerID
         );
 
         setInventory(inventoryData);
@@ -29,6 +32,9 @@ export default function InventoryView() {
   }, [selectedPlayer]);
 
   const handleBuyIngredient = async (ingredient: string, cost: number) => {
+    if (!selectedPlayer) {
+      return null;
+    }
     try {
       const updatedInventory = await inventoryAPI.buyIngredient(
         selectedPlayer.playerID,
@@ -42,7 +48,7 @@ export default function InventoryView() {
   };
 
   return (
-    <Card title={`${selectedPlayer.name}'s Inventory`}>
+    <Card title={`${selectedPlayer?.name}'s Inventory`}>
       <DataTable value={inventory} responsiveLayout="scroll" stripedRows>
         <Column field="ingredient" header="Ingredient" />
         <Column field="quantity" header="Quantity" />
