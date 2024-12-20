@@ -1,8 +1,14 @@
 import axios from "axios";
 
 // Create an Axios instance
+const baseURL =
+  process.env.NODE_ENV === "development"
+    ? process.env.NEXT_PUBLIC_LOCAL_API_BASE_URL 
+    : process.env.NEXT_PUBLIC_API_BASE_URL; 
+
+// Create Axios instance
 const customAxios = axios.create({
-  baseURL: "http://localhost:3001", 
+  baseURL,
   headers: {
     "Content-Type": "application/json",
   },
