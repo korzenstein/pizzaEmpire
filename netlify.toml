@@ -1,10 +1,7 @@
 [build]
-command = "npm run build"
-publish = "build" # For Create React App
-# For Next.js:
-# publish = ".next"
+  command = "npm run build"
+  publish = ".next"
+  functions = "netlify/functions"
 
-[[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
