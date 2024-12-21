@@ -24,15 +24,14 @@ export default function PlayersChoice() {
     getPlayers();
   }, []);
 
-  const handleGoFundMe = async (playerID) => {
+  const handleGoFundMe = async (playerID: number) => {
     try {
       const response = await playersAPI.goFundMe(playerID);
-      // alert(response.message || "Player's income has been increased!");
       if (response) {
         await getPlayers();
       }
     } catch (error) {
-      alert(error); // Display the error returned by `goFundMe`
+      alert(error);
     }
   };
 

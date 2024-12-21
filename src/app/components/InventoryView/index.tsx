@@ -12,36 +12,40 @@ export default function InventoryView() {
   const { selectedPlayer } = useGameStore();
   const [inventory, setInventory] = useState([]);
 
-  useEffect(() => {
-    async function getInventory() {
-      if (!selectedPlayer) {
-        return null;
-      }
-      try {
-        const inventoryData = await inventoryAPI.getInventory(
-          selectedPlayer?.playerID
-        );
-
-        setInventory(inventoryData);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    if (selectedPlayer) getInventory();
-  }, [selectedPlayer]);
-
-  const handleBuyIngredient = async (ingredient: string, cost: number) => {
+  async function getInventory() {
     if (!selectedPlayer) {
       return null;
     }
     try {
+      const inventoryData = await inventoryAPI.getInventory(
+        selectedPlayer?.playerID
+      );
+
+      setInventory(inventoryData);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  useEffect(() => {
+    if (selectedPlayer) getInventory();
+  }, [selectedPlayer]);
+
+  const handleBuyIngredient = async (ingredient: string) => {
+    if (!selectedPlayer) {
+      return null;
+    }
+
+    try {
       const updatedInventory = await inventoryAPI.buyIngredient(
         selectedPlayer.playerID,
-        ingredient,
-        cost
+        ingredient // Only send the ingredient
       );
-      setInventory(updatedInventory);
+
+      console.log(updatedInventory);
+      if (updatedInventory) {
+        getInventory();
+      }
     } catch (error) {
       console.error("Failed to buy ingredient:", error);
     }
@@ -53,13 +57,18 @@ export default function InventoryView() {
         <Column field="ingredient" header="Ingredient" />
         <Column field="quantity" header="Quantity" />
         <Column
+          field="cost"
+          header="Cost"
+          body={(rowData) => `$${rowData.cost}`}
+        />
+        <Column
           header="Actions"
           body={(rowData) => (
             <Button
               label="Buy"
               icon="pi pi-shopping-cart"
               className="p-button-success"
-              onClick={() => handleBuyIngredient(rowData.ingredient, 5)}
+              onClick={() => handleBuyIngredient(rowData.ingredient)}
             />
           )}
         />
