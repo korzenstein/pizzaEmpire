@@ -35,7 +35,12 @@ export default function PlayersChoice() {
     }
   };
 
-  const incomeBodyTemplate = (data: any) => (
+  interface data {
+    income: number;
+    playerID: number;
+  }
+
+  const incomeBodyTemplate = (data: data) => (
     <>
       <span>{`$${data.income.toFixed(2)}`}</span>
       {data.income < 10 && (
